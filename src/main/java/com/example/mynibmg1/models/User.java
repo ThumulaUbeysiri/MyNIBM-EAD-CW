@@ -1,4 +1,5 @@
 package com.example.mynibmg1.models;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -7,36 +8,23 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer userId; // Primary key for User table
+    private Integer userId;
 
-    @Column(unique = true, nullable = false)
-    private String userName; // Unique username
+    @Column(length = 100, nullable = false)
+    private String userName;
 
-    @Column(unique = true, nullable = false)
-    private String email; // Unique email
+    @Column(length = 255, nullable = false)
+    private String password;
 
-    @Column(nullable = false)
-    private String password; // Password for authentication
+    @Column(length = 150, nullable = false, unique = true)
+    private String email;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Role role; // Role of the user (e.g., ADMIN, TEACHER, STUDENT)
+    private Role role;
 
-    // Enum for roles
     public enum Role {
         ADMIN, TEACHER, STUDENT
-    }
-
-    // Default constructor
-    public User() {
-    }
-
-    // Constructor with all fields
-    public User(String userName, String email, String password, Role role) {
-        this.userName = userName;
-        this.email = email;
-        this.password = password;
-        this.role = role;
     }
 
     // Getters and Setters
@@ -56,20 +44,20 @@ public class User {
         this.userName = userName;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
     public String getPassword() {
         return password;
     }
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public Role getRole() {
@@ -79,15 +67,4 @@ public class User {
     public void setRole(Role role) {
         this.role = role;
     }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "userId=" + userId +
-                ", userName='" + userName + '\'' +
-                ", email='" + email + '\'' +
-                ", role=" + role +
-                '}';
-    }
 }
-

@@ -1,4 +1,5 @@
 package com.example.mynibmg1.models;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -12,8 +13,8 @@ public class Admin {
     private String contact; // Admin contact information
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    @MapsId // Maps the userId field to the primary key of User
-    @JoinColumn(name = "user_Id", referencedColumnName = "userId")
+    @MapsId // Links this userId to the primary key of User
+    @JoinColumn(name = "userId") // Ensure the column name matches exactly
     private User user; // Reference to the User entity
 
     // Default constructor

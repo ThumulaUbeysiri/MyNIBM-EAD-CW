@@ -1,4 +1,5 @@
 package com.example.mynibmg1.models;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -16,7 +17,7 @@ public class Teacher {
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @MapsId // Maps the userId to the User table's primary key
-    @JoinColumn(name = "user_Id", referencedColumnName = "userId")
+    @JoinColumn(name = "userId", referencedColumnName = "userId")
     private User user; // Reference to User entity
 
     @ManyToOne

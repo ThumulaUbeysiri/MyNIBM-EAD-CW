@@ -2,20 +2,26 @@ package com.example.mynibmg1.services;
 import com.example.mynibmg1.DTOs.AdminRequestDto;
 import com.example.mynibmg1.DTOs.AdminResponseDto;
 import com.example.mynibmg1.models.Admin;
-import com.example.mynibmg1.models.User;
+import com.example.mynibmg1.models.Users;
 import com.example.mynibmg1.repositories.AdminRepository;
 import com.example.mynibmg1.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class AdminService {
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
     private AdminRepository adminRepository;
 
     @Autowired
     private UserRepository userRepository;
+
+    public AdminService(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
+    }
 
     public AdminResponseDto addAdmin(AdminRequestDto adminDto) {
         // Check for existing email or username
@@ -27,23 +33,23 @@ public class AdminService {
         }
 
         // Create and save User
-        User user = new User();
-        user.setUserName(adminDto.getUserName());
-        user.setPassword(adminDto.getPassword());
-        user.setEmail(adminDto.getEmail());
-        user.setRole(User.Role.ADMIN);
-        User savedUser = userRepository.save(user);
+        Users users = new Users();
+        users.setUserName(adminDto.getUserName());
+        users.setPassword(passwordEncoder.encode(adminDto.getPassword()));
+        users.setEmail(adminDto.getEmail());
+        users.setRole(Users.Role.ADMIN);
+        Users savedUsers = userRepository.save(users);
 
         // Create and save Admin
         Admin admin = new Admin();
         admin.setContact(adminDto.getContact());
-        admin.setUser(savedUser);
+        admin.setUser(savedUsers);
         Admin savedAdmin = adminRepository.save(admin);
 
         return new AdminResponseDto(
-                savedUser.getUserId(),
-                savedUser.getUserName(),
-                savedUser.getEmail(),
+                savedUsers.getUserId(),
+                savedUsers.getUserName(),
+                savedUsers.getEmail(),
                 savedAdmin.getContact()
         );
     }
@@ -52,10 +58,10 @@ public class AdminService {
         Admin admin = adminRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Admin not found with ID: " + id));
 
-        User user = admin.getUser();
-        user.setUserName(adminDto.getUserName());
-        user.setPassword(adminDto.getPassword());
-        user.setEmail(adminDto.getEmail());
+        Users users = admin.getUser();
+        users.setUserName(adminDto.getUserName());
+        users.setPassword(passwordEncoder.encode(adminDto.getPassword()));
+        users.setEmail(adminDto.getEmail());
         admin.setContact(adminDto.getContact());
 
         Admin updatedAdmin = adminRepository.save(admin);

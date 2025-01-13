@@ -22,18 +22,18 @@ public class Student {
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @MapsId
     @JoinColumn(name = "userId", referencedColumnName = "userId")
-    private User user; // Reference to User entity
+    private Users users; // Reference to User entity
 
     // Default constructor
     public Student() {
     }
 
     // Constructor with all fields
-    public Student(Admin admin, Batch batch, Integer enrollmentYear, User user) {
+    public Student(Admin admin, Batch batch, Integer enrollmentYear, Users users) {
         this.admin = admin;
         this.batch = batch;
         this.enrollmentYear = enrollmentYear;
-        this.user = user;
+        this.users = users;
     }
 
     // Getters and Setters
@@ -69,11 +69,11 @@ public class Student {
         this.enrollmentYear = enrollmentYear;
     }
 
-    public User getUser() {
-        return user;
+    public Users getUser() {
+        return users;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUser(Users users) {
+        this.users = users;
     }
 }

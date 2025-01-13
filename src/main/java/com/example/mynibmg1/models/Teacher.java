@@ -18,7 +18,7 @@ public class Teacher {
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @MapsId // Maps the userId to the User table's primary key
     @JoinColumn(name = "userId", referencedColumnName = "userId")
-    private User user; // Reference to User entity
+    private Users users; // Reference to User entity
 
     @ManyToOne
     @JoinColumn(name = "adminUserID", referencedColumnName = "userId")
@@ -29,10 +29,10 @@ public class Teacher {
     }
 
     // Constructor with all fields
-    public Teacher(String contact, String department, User user, Admin admin) {
+    public Teacher(String contact, String department, Users users, Admin admin) {
         this.contact = contact;
         this.department = department;
-        this.user = user;
+        this.users = users;
         this.admin = admin;
     }
 
@@ -61,12 +61,12 @@ public class Teacher {
         this.department = department;
     }
 
-    public User getUser() {
-        return user;
+    public Users getUser() {
+        return users;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUser(Users users) {
+        this.users = users;
     }
 
     public Admin getAdmin() {
@@ -83,7 +83,7 @@ public class Teacher {
                 "userId=" + userId +
                 ", contact='" + contact + '\'' +
                 ", department='" + department + '\'' +
-                ", user=" + user +
+                ", user=" + users +
                 ", admin=" + admin +
                 '}';
     }

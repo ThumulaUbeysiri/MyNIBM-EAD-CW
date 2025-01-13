@@ -3,12 +3,13 @@ import com.example.mynibmg1.DTOs.TeacherRequestDto;
 import com.example.mynibmg1.DTOs.TeacherResponseDto;
 import com.example.mynibmg1.models.Admin;
 import com.example.mynibmg1.models.Teacher;
-import com.example.mynibmg1.models.User;
+import com.example.mynibmg1.models.Users;
 import com.example.mynibmg1.repositories.AdminRepository;
 import com.example.mynibmg1.repositories.TeacherRepository;
 import com.example.mynibmg1.repositories.UserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,6 +17,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class TeacherService {
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
     private TeacherRepository teacherRepository;
@@ -25,6 +27,10 @@ public class TeacherService {
 
     @Autowired
     private AdminRepository adminRepository;
+
+    public TeacherService(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
+    }
 
     public TeacherResponseDto addTeacher(TeacherRequestDto teacherDto) {
         // Check if email already exists
@@ -42,18 +48,18 @@ public class TeacherService {
                 .orElseThrow(() -> new RuntimeException("Admin not found with ID: " + teacherDto.getAdminUserId()));
 
         // Create User entity
-        User user = new User();
-        user.setUserName(teacherDto.getUserName());
-        user.setPassword(teacherDto.getPassword());
-        user.setEmail(teacherDto.getEmail());
-        user.setRole(User.Role.TEACHER);
+        Users users = new Users();
+        users.setUserName(teacherDto.getUserName());
+        users.setPassword(passwordEncoder.encode(teacherDto.getPassword()));
+        users.setEmail(teacherDto.getEmail());
+        users.setRole(Users.Role.TEACHER);
 
         // Save User entity
-        User savedUser = userRepository.save(user);
+        Users savedUsers = userRepository.save(users);
 
         // Create Teacher entity linked to the saved User and Admin
         Teacher teacher = new Teacher();
-        teacher.setUser(savedUser);
+        teacher.setUser(savedUsers);
         teacher.setAdmin(admin);
         teacher.setContact(teacherDto.getContact());
         teacher.setDepartment(teacherDto.getDepartment());
@@ -62,9 +68,9 @@ public class TeacherService {
         Teacher savedTeacher = teacherRepository.save(teacher);
 
         return new TeacherResponseDto(
-                savedUser.getUserId(),
-                savedUser.getUserName(),
-                savedUser.getEmail(),
+                savedUsers.getUserId(),
+                savedUsers.getUserName(),
+                savedUsers.getEmail(),
                 savedTeacher.getContact(),
                 savedTeacher.getDepartment()
         );
@@ -98,20 +104,20 @@ public class TeacherService {
         Teacher teacher = teacherRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Teacher not found with ID: " + id));
 
-        User user = teacher.getUser();
-        user.setUserName(teacherDto.getUserName());
-        user.setPassword(teacherDto.getPassword());
-        user.setEmail(teacherDto.getEmail());
-        userRepository.save(user);
+        Users users = teacher.getUser();
+        users.setUserName(teacherDto.getUserName());
+        users.setPassword(passwordEncoder.encode(teacherDto.getPassword()));
+        users.setEmail(teacherDto.getEmail());
+        userRepository.save(users);
 
         teacher.setContact(teacherDto.getContact());
         teacher.setDepartment(teacherDto.getDepartment());
         teacherRepository.save(teacher);
 
         return new TeacherResponseDto(
-                user.getUserId(),
-                user.getUserName(),
-                user.getEmail(),
+                users.getUserId(),
+                users.getUserName(),
+                users.getEmail(),
                 teacher.getContact(),
                 teacher.getDepartment());
     }

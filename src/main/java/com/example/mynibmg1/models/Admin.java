@@ -15,16 +15,16 @@ public class Admin {
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @MapsId // Links this userId to the primary key of User
     @JoinColumn(name = "userId") // Ensure the column name matches exactly
-    private User user; // Reference to the User entity
+    private Users users; // Reference to the User entity
 
     // Default constructor
     public Admin() {
     }
 
     // Constructor with all fields
-    public Admin(String contact, User user) {
+    public Admin(String contact, Users users) {
         this.contact = contact;
-        this.user = user;
+        this.users = users;
     }
 
     // Getters and Setters
@@ -44,12 +44,12 @@ public class Admin {
         this.contact = contact;
     }
 
-    public User getUser() {
-        return user;
+    public Users getUser() {
+        return users;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUser(Users users) {
+        this.users = users;
     }
 
     @Override
@@ -57,7 +57,7 @@ public class Admin {
         return "Admin{" +
                 "userId=" + userId +
                 ", contact='" + contact + '\'' +
-                ", user=" + user +
+                ", user=" + users +
                 '}';
     }
 }

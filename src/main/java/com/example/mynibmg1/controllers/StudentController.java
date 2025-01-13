@@ -15,7 +15,6 @@ public class StudentController {
 
     @Autowired
     private StudentService studentService;
-
     // Get all students created by a specific Admin
     @GetMapping("/get/{adminUserID}")
     public ResponseEntity<List<StudentResponseDTO>> getStudentsByAdmin(@PathVariable Integer adminUserID) {

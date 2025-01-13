@@ -5,12 +5,13 @@ import com.example.mynibmg1.DTOs.StudentResponseDTO;
 import com.example.mynibmg1.models.Admin;
 import com.example.mynibmg1.models.Batch;
 import com.example.mynibmg1.models.Student;
-import com.example.mynibmg1.models.User;
+import com.example.mynibmg1.models.Users;
 import com.example.mynibmg1.repositories.AdminRepository;
 import com.example.mynibmg1.repositories.BatchRepository;
 import com.example.mynibmg1.repositories.StudentRepository;
 import com.example.mynibmg1.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,6 +19,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class StudentService {
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
     private StudentRepository studentRepository;
@@ -30,6 +32,10 @@ public class StudentService {
 
     @Autowired
     private BatchRepository batchRepository;
+
+    public StudentService(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
+    }
 
     public StudentResponseDTO addStudent(StudentRequestDTO requestDTO) {
         // Validate unique email and username
@@ -50,17 +56,17 @@ public class StudentService {
                 .orElseThrow(() -> new RuntimeException("Batch not found with ID: " + requestDTO.getBatchID()));
 
         // Create and save User entity
-        User user = new User();
-        user.setUserName(requestDTO.getUserName());
-        user.setPassword(requestDTO.getPassword());
-        user.setEmail(requestDTO.getEmail());
-        user.setRole(User.Role.STUDENT);
+        Users users = new Users();
+        users.setUserName(requestDTO.getUserName());
+        users.setPassword(passwordEncoder.encode(requestDTO.getPassword()));
+        users.setEmail(requestDTO.getEmail());
+        users.setRole(Users.Role.STUDENT);
 
-        User savedUser = userRepository.save(user);
+        Users savedUsers = userRepository.save(users);
 
         // Create and save Student entity
         Student student = new Student();
-        student.setUser(savedUser);
+        student.setUser(savedUsers);
         student.setAdmin(admin);
         student.setBatch(batch);
         student.setEnrollmentYear(requestDTO.getEnrollmentYear());
@@ -99,15 +105,15 @@ public class StudentService {
 
     public StudentResponseDTO updateStudent(Integer userId, StudentRequestDTO requestDTO) {
         // Find Student by User ID
-        Student student = studentRepository.findByUser_UserId(userId)
+        Student student = studentRepository.findByUsers_UserId(userId)
                 .orElseThrow(() -> new RuntimeException("Student not found with User ID: " + userId));
 
         // Update User details
-        User user = student.getUser();
-        user.setUserName(requestDTO.getUserName());
-        user.setPassword(requestDTO.getPassword());
-        user.setEmail(requestDTO.getEmail());
-        userRepository.save(user);
+        Users users = student.getUser();
+        users.setUserName(requestDTO.getUserName());
+        users.setPassword(passwordEncoder.encode(requestDTO.getPassword()));
+        users.setEmail(requestDTO.getEmail());
+        userRepository.save(users);
 
         // Update Admin and Batch relationships
         Admin admin = adminRepository.findById(requestDTO.getAdminUserID())
@@ -126,7 +132,7 @@ public class StudentService {
     }
 
     public void deleteStudent(Integer userId) {
-        Student student = studentRepository.findByUser_UserId(userId)
+        Student student = studentRepository.findByUsers_UserId(userId)
                 .orElseThrow(() -> new RuntimeException("Student not found with User ID: " + userId));
 
         studentRepository.delete(student);

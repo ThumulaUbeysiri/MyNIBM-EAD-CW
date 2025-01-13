@@ -13,6 +13,6 @@ import java.util.Optional;
 public interface StudentRepository extends JpaRepository<Student, Integer> {
     List<Student> findByAdmin_UserId(Integer adminID);
 
-    Optional<Student> findByUser_UserId(Integer userId);
+    Optional<Student> findByUsers_UserId(Integer userId);
 
 }

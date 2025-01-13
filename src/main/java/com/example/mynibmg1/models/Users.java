@@ -3,8 +3,8 @@ package com.example.mynibmg1.models;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "User")
-public class User {
+@Table(name = "Users")
+public class Users {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,6 +22,13 @@ public class User {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;
+
+    public Users(String username, String password, String role, String name) {
+    }
+
+    public Users() {
+
+    }
 
     public enum Role {
         ADMIN, TEACHER, STUDENT

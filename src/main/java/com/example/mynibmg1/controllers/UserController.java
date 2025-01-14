@@ -1,5 +1,6 @@
 package com.example.mynibmg1.controllers;
 
+import com.example.mynibmg1.Utils.JwtUtil;
 import com.example.mynibmg1.models.Users;
 import com.example.mynibmg1.services.UserService;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ import java.util.Map;
 public class UserController {
 
     UserService UserService;
+    JwtUtil JwtUtil;
 
     public UserController(UserService UserService) {
         this.UserService = UserService;
@@ -32,7 +34,7 @@ public class UserController {
         }
 
         // Return the generated token
-        return ResponseEntity.ok(Map.of("token", token));
+        return ResponseEntity.ok(Map.of("token", token + JwtUtil.getRoleFromToken(token)));
     }
 
     @PostMapping("/register")

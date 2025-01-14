@@ -7,6 +7,7 @@ import com.example.mynibmg1.DTOs.WorkshopRequestDTO;
 import com.example.mynibmg1.services.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,6 +21,7 @@ public class EventController {
 
     // Update Interview for a Batch
     @PostMapping("/interviews/{interviewId}/batch/{batchId}")
+    @PreAuthorize("hasRole('TEACHER')")
     public ResponseEntity<EventResponseDTO> updateInterviewForBatch(
             @PathVariable Integer interviewId,
             @PathVariable Integer batchId,
@@ -31,6 +33,7 @@ public class EventController {
 
     // Update Interview for a Student
     @PutMapping("/interviews/{interviewId}/student/{studentId}")
+    @PreAuthorize("hasRole('TEACHER')")
     public ResponseEntity<EventResponseDTO> updateInterviewForStudent(
             @PathVariable Integer interviewId,
             @PathVariable Integer studentId,
@@ -41,6 +44,7 @@ public class EventController {
 
     // Update Workshop for a Batch
     @PutMapping("/workshops/{workshopId}/batch/{batchId}")
+    @PreAuthorize("hasRole('TEACHER')")
     public ResponseEntity<EventResponseDTO> updateWorkshopForBatch(
             @PathVariable Integer workshopId,
             @PathVariable Integer batchId,
@@ -51,6 +55,7 @@ public class EventController {
 
     // Update Workshop for a Student
     @PutMapping("/workshops/{workshopId}/student/{studentId}")
+    @PreAuthorize("hasRole('TEACHER')")
     public ResponseEntity<EventResponseDTO> updateWorkshopForStudent(
             @PathVariable Integer workshopId,
             @PathVariable Integer studentId,
@@ -62,6 +67,7 @@ public class EventController {
 
     // Create Interview for a Batch
     @PostMapping("/interviews/batch/{batchId}")
+    @PreAuthorize("hasRole('TEACHER')")
     public ResponseEntity<EventResponseDTO> createInterviewForBatch(
             @RequestBody InterviewRequestDTO requestDTO,
             @PathVariable Integer batchId) {
@@ -71,6 +77,7 @@ public class EventController {
 
     // Create Interview for a Student
     @PostMapping("/interviews/student/{studentId}")
+    @PreAuthorize("hasRole('TEACHER')")
     public ResponseEntity<EventResponseDTO> createInterviewForStudent(
             @RequestBody InterviewRequestDTO requestDTO,
             @PathVariable Integer studentId) {
@@ -80,6 +87,7 @@ public class EventController {
 
     // Create Workshop for a Batch
     @PostMapping("/workshops/batch/{batchId}")
+    @PreAuthorize("hasRole('TEACHER')")
     public ResponseEntity<EventResponseDTO> createWorkshopForBatch(
             @RequestBody EventRequestDTO requestDTO,
             @PathVariable Integer batchId) {
@@ -89,6 +97,7 @@ public class EventController {
 
     // Create Workshop for a Student
     @PostMapping("/workshops/student/{studentId}")
+    @PreAuthorize("hasRole('TEACHER')")
     public ResponseEntity<EventResponseDTO> createWorkshopForStudent(
             @RequestBody EventRequestDTO requestDTO,
             @PathVariable Integer studentId) {
@@ -101,6 +110,7 @@ public class EventController {
 
     // Get All Interviews Created by a Teacher
     @GetMapping("/interviews/teacher/{teacherId}")
+    @PreAuthorize("hasRole('TEACHER') or hasRole('STUDENT')")
     public ResponseEntity<List<EventResponseDTO>> getInterviewsByTeacher(@PathVariable Integer teacherId) {
         List<EventResponseDTO> interviews = eventService.getInterviewsByTeacher(teacherId);
         return ResponseEntity.ok(interviews);
@@ -108,6 +118,7 @@ public class EventController {
 
     // Get All Workshops Created by a Teacher
     @GetMapping("/workshops/teacher/{teacherId}")
+    @PreAuthorize("hasRole('TEACHER') or hasRole('STUDENT')")
     public ResponseEntity<List<EventResponseDTO>> getWorkshopsByTeacher(@PathVariable Integer teacherId) {
         List<EventResponseDTO> workshops = eventService.getWorkshopsByTeacher(teacherId);
         return ResponseEntity.ok(workshops);
@@ -115,6 +126,7 @@ public class EventController {
 
     // Get All Events for a Batch
     @GetMapping("/batch/{batchId}")
+    @PreAuthorize("hasRole('TEACHER') or hasRole('STUDENT')")
     public ResponseEntity<List<EventResponseDTO>> getEventsForBatch(@PathVariable Integer batchId) {
         List<EventResponseDTO> events = eventService.getEventsForBatch(batchId);
         return ResponseEntity.ok(events);
@@ -122,6 +134,7 @@ public class EventController {
 
     // Get All Events for a Student
     @GetMapping("/student/{studentId}")
+    @PreAuthorize("hasRole('TEACHER') or hasRole('STUDENT')")
     public ResponseEntity<List<EventResponseDTO>> getEventsForStudent(@PathVariable Integer studentId) {
         List<EventResponseDTO> events = eventService.getEventsForStudent(studentId);
         return ResponseEntity.ok(events);
@@ -129,6 +142,7 @@ public class EventController {
 
     // Get All Interviews for a Batch
     @GetMapping("/interviews/batch/{batchId}")
+    @PreAuthorize("hasRole('TEACHER') or hasRole('STUDENT')")
     public ResponseEntity<List<EventResponseDTO>> getInterviewsByBatchId(@PathVariable Integer batchId) {
         List<EventResponseDTO> interviews = eventService.getInterviewsByBatchId(batchId);
         return ResponseEntity.ok(interviews);
@@ -136,6 +150,7 @@ public class EventController {
 
     // Get All Workshops for a Batch
     @GetMapping("/workshops/batch/{batchId}")
+    @PreAuthorize("hasRole('TEACHER') or hasRole('STUDENT')")
     public ResponseEntity<List<EventResponseDTO>> getWorkshopsByBatchId(@PathVariable Integer batchId) {
         List<EventResponseDTO> workshops = eventService.getWorkshopsByBatchId(batchId);
         return ResponseEntity.ok(workshops);
@@ -143,6 +158,7 @@ public class EventController {
 
     // Get All Interviews for a Student
     @GetMapping("/interviews/student/{studentId}")
+    @PreAuthorize("hasRole('TEACHER') or hasRole('STUDENT')")
     public ResponseEntity<List<EventResponseDTO>> getInterviewsByStudentId(@PathVariable Integer studentId) {
         List<EventResponseDTO> interviews = eventService.getInterviewsByStudentId(studentId);
         return ResponseEntity.ok(interviews);
@@ -150,6 +166,7 @@ public class EventController {
 
     // Get All Workshops for a Student
     @GetMapping("/workshops/student/{studentId}")
+    @PreAuthorize("hasRole('TEACHER') or hasRole('STUDENT')")
     public ResponseEntity<List<EventResponseDTO>> getWorkshopsByStudentId(@PathVariable Integer studentId) {
         List<EventResponseDTO> workshops = eventService.getWorkshopsByStudentId(studentId);
         return ResponseEntity.ok(workshops);
@@ -159,6 +176,7 @@ public class EventController {
 
     // Delete Interview for a Batch
     @DeleteMapping("/interviews/{interviewId}/batch/{batchId}")
+    @PreAuthorize("hasRole('TEACHER')")
     public ResponseEntity<Void> deleteInterviewForBatch(
             @PathVariable Integer interviewId, @PathVariable Integer batchId) {
         eventService.deleteInterviewForBatch(interviewId, batchId);
@@ -167,6 +185,7 @@ public class EventController {
 
     // Delete Interview for a Student
     @DeleteMapping("/interviews/{interviewId}/student/{studentId}")
+    @PreAuthorize("hasRole('TEACHER')")
     public ResponseEntity<Void> deleteInterviewForStudent(
             @PathVariable Integer interviewId, @PathVariable Integer studentId) {
         eventService.deleteInterviewForStudent(interviewId, studentId);
@@ -175,6 +194,7 @@ public class EventController {
 
     // Delete Workshop for a Batch
     @DeleteMapping("/workshops/{workshopId}/batch/{batchId}")
+    @PreAuthorize("hasRole('TEACHER')")
     public ResponseEntity<Void> deleteWorkshopForBatch(
             @PathVariable Integer workshopId, @PathVariable Integer batchId) {
         eventService.deleteWorkshopForBatch(workshopId, batchId);
@@ -183,6 +203,7 @@ public class EventController {
 
     // Delete Workshop for a Student
     @DeleteMapping("/workshops/{workshopId}/student/{studentId}")
+    @PreAuthorize("hasRole('TEACHER')")
     public ResponseEntity<Void> deleteWorkshopForStudent(
             @PathVariable Integer workshopId, @PathVariable Integer studentId) {
         eventService.deleteWorkshopForStudent(workshopId, studentId);

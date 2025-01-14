@@ -5,6 +5,7 @@ import com.example.mynibmg1.DTOs.StudentResponseDTO;
 import com.example.mynibmg1.services.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,6 +18,7 @@ public class StudentController {
     private StudentService studentService;
     // Get all students created by a specific Admin
     @GetMapping("/get/{adminUserID}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<StudentResponseDTO>> getStudentsByAdmin(@PathVariable Integer adminUserID) {
         List<StudentResponseDTO> students = studentService.getStudentsByAdminUserId(adminUserID);
         return ResponseEntity.ok(students);
@@ -24,12 +26,14 @@ public class StudentController {
 
     // Add a new student
     @PostMapping("/add")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<StudentResponseDTO> addStudent(@RequestBody StudentRequestDTO requestDTO) {
         return ResponseEntity.ok(studentService.addStudent(requestDTO));
     }
 
     // Update an existing student
     @PutMapping("/update/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<StudentResponseDTO> updateStudent(
             @PathVariable Integer id,
             @RequestBody StudentRequestDTO requestDTO) {
@@ -38,6 +42,7 @@ public class StudentController {
 
     // Delete a student
     @DeleteMapping("/delete/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteStudent(@PathVariable Integer id) {
         studentService.deleteStudent(id);
         return ResponseEntity.noContent().build();

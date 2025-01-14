@@ -36,7 +36,7 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    @PreAuthorize("hasRole('Admin')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> register(@RequestBody Map<String, String> registrationRequest) {
         try {
             String username = registrationRequest.get("username");

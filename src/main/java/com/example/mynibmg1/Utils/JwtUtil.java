@@ -77,7 +77,8 @@ public class JwtUtil {
     }
 
     // Get the role from the token
-    public void getRoleFromToken(String token) {
+    public String getRoleFromToken(String token) {
         role = extractClaim(token, claims -> claims.get("role", String.class));
+        return role;
     }
 }
